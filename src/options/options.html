@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitGrab Settings</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="options-layout">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-logo">
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="#2da44e">
+          <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0 0 22 12.017C22 6.484 17.522 2 12 2Z"/>
+        </svg>
+        <div>
+          <h1>GitGrab Settings</h1>
+          <p class="subtitle">Configure GitHub authentication and download preferences</p>
+        </div>
+      </div>
+    </header>
+
+    <main class="content">
+      <!-- GitHub Authentication Card -->
+      <section class="card">
+        <div class="card-header">
+          <h2>GitHub Authentication (Personal Access Token)</h2>
+          <span class="badge" id="rate-limit-badge">Checking rate limit...</span>
+        </div>
+        <p class="card-desc">
+          GitHub restricts unauthenticated API calls to <strong>60 requests per hour</strong>. Adding a free token raises your rate limit to <strong>5,000 requests per hour</strong> and enables downloading from private repositories.
+        </p>
+
+        <div class="form-group">
+          <label for="github-token">Personal Access Token (classic or fine-grained)</label>
+          <div class="input-action-row">
+            <input 
+              type="password" 
+              id="github-token" 
+              placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" 
+              autocomplete="off"
+              spellcheck="false"
+            >
+            <button type="button" id="toggle-token-visibility" class="btn btn-outline" title="Show/Hide">👁️</button>
+            <button type="button" id="test-token-btn" class="btn btn-secondary">Test & Verify</button>
+          </div>
+          <div id="token-test-feedback" class="feedback-msg hidden"></div>
+        </div>
+
+        <div class="helper-box">
+          <strong>💡 How to create a free GitHub Token:</strong>
+          <ol>
+            <li>Go to <a href="https://github.com/settings/tokens/new" target="_blank" rel="noreferrer">GitHub Settings &rarr; Developer Settings &rarr; Personal access tokens (classic)</a>.</li>
+            <li>Set note to <code>GitGrab Extension</code> and expiration to <code>No expiration</code> (or your choice).</li>
+            <li><strong>No scopes needed</strong> for public repositories. (Check <code>repo</code> scope only if you want to download from private repos).</li>
+            <li>Click <strong>Generate token</strong> and paste it above.</li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- Download Preferences Card -->
+      <section class="card">
+        <div class="card-header">
+          <h2>Download & Packaging Preferences</h2>
+        </div>
+
+        <!-- Concurrency -->
+        <div class="form-group">
+          <div class="label-with-value">
+            <label for="concurrency-range">Max Concurrent Downloads</label>
+            <span class="range-val" id="concurrency-val">5 files</span>
+          </div>
+          <input type="range" id="concurrency-range" min="1" max="10" value="5" step="1">
+          <span class="help-text">Higher speeds up downloads for large folders, but consumes more bandwidth.</span>
+        </div>
+
+        <!-- Compression Level -->
+        <div class="form-group">
+          <div class="label-with-value">
+            <label for="compression-range">ZIP Compression Level</label>
+            <span class="range-val" id="compression-val">Level 6 (Balanced)</span>
+          </div>
+          <input type="range" id="compression-range" min="1" max="9" value="6" step="1">
+          <span class="help-text">Level 1 (Fastest, low CPU) to Level 9 (Smallest file size). Default is 6.</span>
+        </div>
+
+        <!-- Checkboxes -->
+        <div class="form-group checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="preserve-folder-structure" checked>
+            <span>Include target folder as root inside ZIP archive</span>
+          </label>
+        </div>
+
+        <div class="form-group checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="show-toast" checked>
+            <span>Show in-page floating progress toast on GitHub</span>
+          </label>
+        </div>
+      </section>
+
+      <!-- Save Actions -->
+      <div class="actions-bar">
+        <button type="button" id="save-btn" class="btn btn-primary">Save Settings</button>
+        <span id="save-status" class="save-status hidden">✓ Saved successfully!</span>
+      </div>
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../utils/storage.js"></script>
+  <script src="../lib/github-api.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>
